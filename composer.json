@@ -1,0 +1,43 @@
+{
+	"name"        : "busyphp/ide-model",
+	"type"        : "library",
+	"description" : "用于生成BusyPHP的模型/模型字段注释或模型字段属性，以提高开发效率",
+	"homepage"    : "http://www.harter.cn/?form=BusyPHP&plugin=busyphp/ide-model",
+	"keywords"    : [
+		"model ide helper",
+		"ide helper"
+	],
+	"authors"     : [
+		{
+			"name"  : "busy^life",
+			"email" : "busy.life@qq.com"
+		}
+	],
+	"license"     : "Apache-2.0",
+	"require"     : {
+		"php"                   : ">=8.0.0",
+		"busyphp/busyphp"       : "^7.0",
+		"busyphp/ide-generator" : "^1.0"
+	},
+	"require-dev" : {
+		"symfony/var-dumper" : "^4.2"
+	},
+	"autoload"    : {
+		"psr-4" : {
+			"BusyPHP\\ide\\model\\" : "src"
+		}
+	},
+	"extra"       : {
+		"busyphp" : {
+			"services" : [
+				"BusyPHP\\ide\\model\\Service"
+			],
+			"manager"  : {
+				"name" : "模型注释生成器"
+			}
+		}
+	},
+	"config"      : {
+		"preferred-install" : "dist"
+	}
+}
