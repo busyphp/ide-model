@@ -50,7 +50,9 @@ class Model extends Command
             ->addOption('ignore', 'I', Option::VALUE_OPTIONAL | Option::VALUE_IS_ARRAY, 'Which models/fields to ignore', [])
             ->addOption('reset', 'R', Option::VALUE_NONE, 'Remove the original phpdocs instead of appending')
             ->addOption('overwrite', 'O', Option::VALUE_NONE, 'Overwrite the phpdocs')
-            ->addOption('all', 'A', Option::VALUE_NONE, 'Scan all files in the `core/model` directory');
+            ->addOption('all', 'A', Option::VALUE_NONE, 'Scan all files in the `core/model` directory')
+            ->addOption('full', 'F', Option::VALUE_NONE, 'All methods or attributes the phpdocs')
+            ->addOption('type', 'T', Option::VALUE_OPTIONAL | Option::VALUE_IS_ARRAY, 'Specify the method or property type to generate', []);
     }
     
     
@@ -59,6 +61,16 @@ class Model extends Command
         $overwrite = $this->input->getOption('overwrite');
         $reset     = $this->input->getOption('reset');
         $dirs      = $this->parseValues($this->input->getOption('dir'));
+        $full      = $this->input->getOption('full');
+        $type      = $this->parseValues($this->input->getOption('type'));
+        
+        $limit = true;
+        if ($full) {
+            $limit = false;
+        }
+        if ($type) {
+            $limit = $type;
+        }
         
         // 指定模型
         if ($models = $this->input->getArgument('model')) {
@@ -96,9 +108,11 @@ class Model extends Command
             try {
                 if (is_subclass_of($class, Field::class)) {
                     $generator = new FieldGenerator($class, $reset, $overwrite, $this->output);
+                    $generator->setLimit($limit);
                     $generator->generate();
                 } else {
                     $generator = new ModelGenerator($class, $reset, $overwrite, $this->output);
+                    $generator->setLimit($limit);
                     $generator->generate();
                     if ($fieldClass = $generator->getModel()->getFieldClass(false)) {
                         $ignore[] = ClassHelper::getAbsoluteClassname($fieldClass, true);
