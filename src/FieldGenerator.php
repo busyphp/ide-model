@@ -11,6 +11,7 @@ use BusyPHP\Model;
 use BusyPHP\model\Entity;
 use BusyPHP\model\Field;
 use think\Container;
+use think\validate\ValidateRule;
 
 /**
  * FieldGenerator
@@ -181,7 +182,8 @@ class FieldGenerator extends Generator
             $this->addDocMethod(
                 'set' . $field['studly'],
                 [
-                    new Argument($field['name'], [$field['type'], 'mixed'])
+                    new Argument(StringHelper::camel($field['name']),  'mixed'),
+                    new Argument('validate', [ValidateRule::class . '[]', 'bool'], 'false')
                 ],
                 '$this',
                 false,
